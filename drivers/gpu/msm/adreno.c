@@ -2608,6 +2608,90 @@ static ssize_t _ft_hang_intr_status_show(struct device *dev,
 		test_bit(ADRENO_DEVICE_HANG_INTR, &adreno_dev->priv) ? 1 : 0);
 }
 
+/**
+ * _ft_hang_intr_status_store -  Routine to enable/disable h/w hang interrupt
+ * @dev: device ptr
+ * @attr: Device attribute
+ * @buf: value to write
+ * @count: size of the value to write
+ *
+ */
+static ssize_t _ft_hang_intr_status_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	unsigned int new_setting, old_setting;
+	struct kgsl_device *device = kgsl_device_from_dev(dev);
+	struct adreno_device *adreno_dev;
+	int ret;
+	if (device == NULL)
+		return 0;
+	adreno_dev = ADRENO_DEVICE(device);
+
+	mutex_lock(&device->mutex);
+	ret = _ft_sysfs_store(buf, count, &new_setting);
+	if (ret != count)
+		goto done;
+	if (new_setting)
+		new_setting = 1;
+	old_setting =
+		(test_bit(ADRENO_DEVICE_HANG_INTR, &adreno_dev->priv) ? 1 : 0);
+	if (new_setting != old_setting) {
+		if (new_setting)
+			set_bit(ADRENO_DEVICE_HANG_INTR, &adreno_dev->priv);
+		else
+			clear_bit(ADRENO_DEVICE_HANG_INTR, &adreno_dev->priv);
+		/* Set the new setting based on device state */
+		switch (device->state) {
+		case KGSL_STATE_NAP:
+		case KGSL_STATE_SLEEP:
+			kgsl_pwrctrl_clk(device, KGSL_PWRFLAGS_ON,
+					device->state);
+		case KGSL_STATE_ACTIVE:
+			adreno_dev->gpudev->irq_control(adreno_dev, 1);
+		/*
+		 * For following states setting will be picked up on device
+		 * start. Still need them in switch statement to differentiate
+		 * from default
+		 */
+		case KGSL_STATE_SLUMBER:
+		case KGSL_STATE_SUSPEND:
+			break;
+		default:
+			ret = -EACCES;
+			/* reset back to old setting on error */
+			if (new_setting)
+				clear_bit(ADRENO_DEVICE_HANG_INTR,
+					&adreno_dev->priv);
+			else
+				set_bit(ADRENO_DEVICE_HANG_INTR,
+					&adreno_dev->priv);
+			goto done;
+		}
+	}
+done:
+	mutex_unlock(&device->mutex);
+	return ret;
+}
+
+/**
+ * _ft_hang_intr_status_show() -  Routine to read hardware hang interrupt
+ * enablement
+ * @dev: device ptr
+ * @attr: Device attribute
+ * @buf: value read
+ */
+static ssize_t _ft_hang_intr_status_show(struct device *dev,
+					struct device_attribute *attr,
+					char *buf)
+{
+	struct adreno_device *adreno_dev = _get_adreno_dev(dev);
+	if (adreno_dev == NULL)
+		return 0;
+	return snprintf(buf, PAGE_SIZE, "%d\n",
+		test_bit(ADRENO_DEVICE_HANG_INTR, &adreno_dev->priv) ? 1 : 0);
+}
+
 #define FT_DEVICE_ATTR(name) \
 	DEVICE_ATTR(name, 0644,	_ ## name ## _show, _ ## name ## _store);
 
