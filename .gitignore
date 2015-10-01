@@ -88,5 +88,6 @@ zip/
 
 *~
 *.sh
+kernel/hz.bc
 \zip
 \#*#
