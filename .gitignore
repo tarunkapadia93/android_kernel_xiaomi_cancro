@@ -82,6 +82,10 @@ GSYMS
 GTAGS
 
 *.orig
+*.sh
+kernel/hz.bc
+zip/
+
 *~
 *.sh
 \zip
