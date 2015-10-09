@@ -2,6 +2,7 @@
  * drivers/thermal/msm_thermal_simple.c
  *
  * Copyright (C) 2014-2015, Sultanxda <sultanxda@gmail.com>
+ * Copyright (C) 2014-2015, Tarun93 <tarunmyid@gmail.com> 
  *
  * Originally based off the MSM8x60 thermal implementation by:
  * Copyright (c) 2012, The Linux Foundation. All rights reserved.
@@ -61,7 +62,6 @@ struct thermal_config {
 	unsigned int reset_low_degC;
 	unsigned int sampling_ms;
 	unsigned int enabled;
-	unsigned int user_maxfreq;
 };
 
 static struct thermal_config *t_conf;
@@ -92,7 +92,9 @@ static void msm_thermal_main(struct work_struct *work)
 
 	temp = result.physical;
 	old_throttle = t_pol->cpu_throttle;
-
+       /* Debug */
+       pr_warn("xo_therm_pu2 temp is %lluC\n", temp);
+       
 	/* Low trip point */
 	if ((temp >= t_conf->trip_low_degC) &&
 		(temp < t_conf->trip_mid_degC) &&
@@ -151,14 +153,14 @@ static void unthrottle_all_cpus(void)
 static int cpu_do_throttle(struct notifier_block *nb, unsigned long val, void *data)
 {
 	struct cpufreq_policy *policy = data;
-	unsigned int user_max = t_conf->user_maxfreq;
+	unsigned int user_max = policy->user_policy.max;
 
 	if (val != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
 
 	switch (t_pol->cpu_throttle) {
 	case UNTHROTTLE:
-		policy->max = user_max ? user_max : policy->cpuinfo.max_freq;
+		policy->max = user_max;
 		break;
 	case LOW_THROTTLE:
 	case MID_THROTTLE:
@@ -266,20 +268,6 @@ static ssize_t enabled_write(struct device *dev,
 	return size;
 }
 
-static ssize_t user_maxfreq_write(struct device *dev,
-		struct device_attribute *attr, const char *buf, size_t size)
-{
-	unsigned int data;
-	int ret = sscanf(buf, "%u", &data);
-
-	if (ret != 1)
-		return -EINVAL;
-
-	t_conf->user_maxfreq = data;
-
-	return size;
-}
-
 static ssize_t high_thresh_read(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -313,18 +301,11 @@ static ssize_t enabled_read(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%u\n", t_conf->enabled);
 }
 
-static ssize_t user_maxfreq_read(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	return snprintf(buf, PAGE_SIZE, "%u\n", t_conf->user_maxfreq);
-}
-
 static DEVICE_ATTR(high_thresh, 0644, high_thresh_read, high_thresh_write);
 static DEVICE_ATTR(mid_thresh, 0644, mid_thresh_read, mid_thresh_write);
 static DEVICE_ATTR(low_thresh, 0644, low_thresh_read, low_thresh_write);
 static DEVICE_ATTR(sampling_ms, 0644, sampling_ms_read, sampling_ms_write);
 static DEVICE_ATTR(enabled, 0644, enabled_read, enabled_write);
-static DEVICE_ATTR(user_maxfreq, 0644, user_maxfreq_read, user_maxfreq_write);
 
 static struct attribute *msm_thermal_attr[] = {
 	&dev_attr_high_thresh.attr,
@@ -332,7 +313,6 @@ static struct attribute *msm_thermal_attr[] = {
 	&dev_attr_low_thresh.attr,
 	&dev_attr_sampling_ms.attr,
 	&dev_attr_enabled.attr,
-	&dev_attr_user_maxfreq.attr,
 	NULL
 };
 
@@ -423,3 +403,4 @@ static int __init msm_thermal_init(void)
 	return platform_driver_register(&msm_thermal_device);
 }
 late_initcall(msm_thermal_init);
+
