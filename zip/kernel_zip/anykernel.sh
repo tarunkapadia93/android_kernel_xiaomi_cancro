@@ -22,6 +22,7 @@ ramdisk=/tmp/anykernel/ramdisk;
 bin=/tmp/anykernel/tools;
 split_img=/tmp/anykernel/split_img;
 patch=/tmp/anykernel/patch;
+bindir=/system/bin;
 
 chmod -R 755 $bin;
 mkdir -p $ramdisk $split_img;

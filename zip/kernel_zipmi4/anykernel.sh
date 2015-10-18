@@ -3,7 +3,7 @@
 
 ## AnyKernel setup
 # EDIFY properties
-kernel.string=Gods Kernel
+kernel.string=God Kernel by Tarun93 @ xda-developers
 #message=Version 6 KamI
 do.devicecheck=1
 do.initd=1
@@ -23,6 +23,7 @@ ramdisk=/tmp/anykernel/ramdisk;
 bin=/tmp/anykernel/tools;
 split_img=/tmp/anykernel/split_img;
 patch=/tmp/anykernel/patch;
+bindir=/system/bin;
 
 chmod -R 755 $bin;
 mkdir -p $ramdisk $split_img;
@@ -170,8 +171,6 @@ if [ "$found" != 'import /init.god.rc' ]; then
         echo "" >> init.rc
 	echo "import /init.god.rc" >> init.rc
 fi
-
-
 
 # end ramdisk changes
 
