@@ -39,7 +39,7 @@ export CROSS_COMPILE=~/toolchains/arm-eabi-4.8s/bin/arm-eabi-
      
      
 echo -e "${bldgrn} Building Defconfig ${txtrst}"
-make cyanogen_cancro_defconfig
+make cancro_user_defconfig 
      
 echo -n "${bldblu}Do you wanna make changes in the defconfig (y/n)? ${txtrst}"
 read answer
@@ -51,7 +51,7 @@ if echo "$answer" | grep -iq "^y" ;then
     read answer
 	    if echo "$answer" | grep -iq "^y" ;then
 	        echo -e "${bldgrn} Building Defconfig GUI ${txtrst}"
-	        cp -f .config $KERNEL_DIR/arch/arm/configs/cyanogen_cancro_defconfig
+	        cp -f .config $KERNEL_DIR/arch/arm/configs/cancro_user_defconfig
     fi
 fi
      
