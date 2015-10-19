@@ -160,6 +160,7 @@ static struct kparam_string fwpath = {
 static char *country_code;
 static int   enable_11d = -1;
 static int   enable_dfs_chan_scan = -1;
+static char *mac;
 
 #ifndef MODULE
 static int wlan_hdd_inited;
@@ -8333,7 +8334,9 @@ int hdd_wlan_startup(struct device *dev )
    // Get mac addr from platform driver
    ret = wcnss_get_wlan_mac_address((char*)&mac_addr.bytes);
 
-   if ((0 == ret) && (!vos_is_macaddr_zero(&mac_addr)))
+   //memcpy((char*)&mac_addr.bytes, mac, 6);
+
+   if ((!vos_is_macaddr_zero(&mac_addr)))
    {
       /* Store the mac addr for first interface */
       pHddCtx->cfg_ini->intfMacAddr[0] = mac_addr;
@@ -8833,7 +8836,9 @@ static int hdd_driver_init( void)
 #ifdef HAVE_WCNSS_CAL_DOWNLOAD
    int max_retries = 0;
 #endif
-
+#ifdef HAVE_CBC_DONE
+   int max_cbc_retries = 0;
+#endif
 #ifdef WCONN_TRACE_KMSG_LOG_BUFF
    vos_wconn_trace_init();
 #endif
@@ -8879,6 +8884,15 @@ static int hdd_driver_init( void)
       wake_lock_destroy(&wlan_wake_lock);
 #endif
       return -ENODEV;
+   }
+#endif
+
+#ifdef HAVE_CBC_DONE
+   while (!wcnss_cbc_complete() && 10 >= ++max_cbc_retries) {
+       msleep(1000);
+   }
+   if (max_cbc_retries >= 10) {
+      hddLog(VOS_TRACE_LEVEL_FATAL, "%s:CBC not completed", __func__);
    }
 #endif
 
@@ -9049,9 +9063,10 @@ static void hdd_driver_exit(void)
          }
        }
 
+      rtnl_lock();
       pHddCtx->isLoadUnloadInProgress = WLAN_HDD_UNLOAD_IN_PROGRESS;
       vos_set_load_unload_in_progress(VOS_MODULE_ID_VOSS, TRUE);
-
+      rtnl_unlock();
       //Do all the cleanup before deregistering the driver
       hdd_wlan_exit(pHddCtx);
    }
@@ -9685,3 +9700,6 @@ module_param(enable_11d, int,
 
 module_param(country_code, charp,
              S_IRUSR | S_IRGRP | S_IROTH);
+
+module_param(mac, charp,
+	     S_IRUSR | S_IRGRP | S_IROTH);
