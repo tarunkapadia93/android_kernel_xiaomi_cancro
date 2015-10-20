@@ -62,14 +62,15 @@ echo -e "${bldgrn}..............................................................
 echo -e "${bldgrn}...................${bldblu}STARTING.GOD'S.KERNEL.BUILD${bldgrn}.......................${txtrst}"
 echo -e "${bldgrn}.....................................................................${txtrst}"
 make -j12
-mv $KERNEL_DIR/arch/arm/boot/zImage  $KERNEL_OUT/zImage
-cp -f $KERNEL_OUT/zImage $KERNEL_OUT/../kernel_zipmi4/zImage
 
 if ! [ -a  $KERNEL_OUT/zImage ];
     then
     echo -e "${bldblu} Kernel Compilation failed! Fix the errors! ${txtrst}"
     exit 1
 fi
+
+mv $KERNEL_DIR/arch/arm/boot/zImage  $KERNEL_OUT/zImage
+cp -f $KERNEL_OUT/zImage $KERNEL_OUT/../kernel_zipmi4/zImage
      
 echo "Copying modules"
 find . -name '*.ko' -exec cp {} $KERNEL_OUT/modules/ \;
@@ -79,15 +80,15 @@ cp -rf $KERNEL_OUT/modules/* $KERNEL_OUT/../kernel_zipmi4/modules/
 
 echo -e "${bldgrn} DTB Build  ${txtrst}"
 .$KERNEL/zip/dtbToolCM -2 -o $KERNEL_OUT/dt.img -s 2048 -p scripts/dtc/ arch/arm/boot/
-cp -f $KERNEL_OUT/dt.img $KERNEL_OUT/../kernel_zipmi4/dtb
 
      
 if ! [ -a $KERNEL_OUT/dt.img ];
     then
-    echo -e "${bldblu} Kernel Compilation failed! Fix the errors! ${txtrst}"
+    echo -e "${bldblu} DTB Compilation failed! Fix the errors! ${txtrst}"
     exit 1
 fi
      
+cp -f $KERNEL_OUT/dt.img $KERNEL_OUT/../kernel_zipmi4/dtb
 
 echo -e "${bldgrn} Zipping the Kernel Build  ${txtrst}"
 cd $KERNEL_OUT/
