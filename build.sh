@@ -6,9 +6,11 @@ txtbld=$(tput bold)             # Bold
 bldgrn=${txtbld}$(tput setaf 2) #  green
 bldblu=${txtbld}$(tput setaf 4) #  blue
 txtrst=$(tput sgr0)             # Reset
- 
+# CURRENT DIRECTORY WHERE YOU HAVE YOUR KERNEL SOURCE 
 KERNEL_DIR=~/mi3
+# OUTPUT FOLDER WHERE YOU HAVE YOU ANYKERNEL TEMPLET N DTBTOOLCM
 KERNEL_OUT=~/mi3/zip/kernel_zip
+# TOOLCHAIN PATH FOR STRIPING TOOLCHAINS
 STRIP=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-strip
  
 #Clean the build
@@ -28,6 +30,9 @@ echo -e "${bldgrn} Setting up Build Environment ${txtrst}"
 export KBUILD_BUILD_USER="Tarun93"
 export KBUILD_BUILD_HOST="GOD'S_KERNEL_R3"
 export ARCH=arm
+
+#ADD THE CORRECT TOOLCHAIN PATH 
+
 #export CROSS_COMPILE=~/toolchains/Sabermod-arm-eabi-5.2/bin/arm-eabi-
 #export CROSS_COMPILE=/home/tarun93/toolchains/arm-cortex_a7-linux-gnueabihf-linaro_4.9/bin/arm-cortex_a7-linux-gnueabihf-
 export CROSS_COMPILE=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-
@@ -35,6 +40,9 @@ export CROSS_COMPILE=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-20
      
      
 echo -e "${bldgrn} Building Defconfig ${txtrst}"
+
+# DEFCONFIG NAME YOU WILL BE USING
+
 make cancro_user_defconfig 
      
 echo -n "${bldblu}Do you wanna make changes in the defconfig (y/n)? ${txtrst}"
