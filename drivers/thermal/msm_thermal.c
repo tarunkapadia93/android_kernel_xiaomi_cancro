@@ -23,6 +23,7 @@
 #include <linux/msm_thermal.h>
 #include <linux/platform_device.h>
 #include <linux/of.h>
+#include <mach/cpufreq.h>
 
 unsigned int poll_interval = 750;
 module_param(poll_interval, int, 0644);
