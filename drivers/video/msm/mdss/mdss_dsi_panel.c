@@ -706,12 +706,11 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	if (ctrl->off_cmds.cmd_cnt)
 		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
 		
+	mdss_dsi_panel_cmd_read(ctrl, 0x04, 0x00, (void *)mdss_dsi_dcs_read_cb, rbuf, 8);
+
 #ifdef CONFIG_POWERSUSPEND
 	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
 #endif
-
-	mdss_dsi_panel_cmd_read(ctrl, 0x04, 0x00, (void *)mdss_dsi_dcs_read_cb, rbuf, 8);
-
 	pr_info("%s:-\n", __func__);
 	if (ctrl->on_cmds_tuning)
 		parse_to_dcs_cmds(&ctrl->on_cmds);
