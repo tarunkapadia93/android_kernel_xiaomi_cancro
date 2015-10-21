@@ -3,18 +3,21 @@
 
 ## AnyKernel setup
 # EDIFY properties
-kernel.string=God Kernel by Tarun93 @ xda-developers
 do.devicecheck=1
-do.initd=1
+do.system=0
+do.initd=0
 do.modules=1
-do.cleanup=0
+do.cleanup=1
 device.name1=cancro
+device.name2=
+device.name3=
+device.name4=
+device.name5=
 
 # shell variables
 block=/dev/block/platform/msm_sdcc.1/by-name/boot;
 
 ## end setup
-
 
 ## AnyKernel methods (DO NOT CHANGE)
 # set up extracted files and directories
@@ -40,14 +43,12 @@ dump_boot() {
     echo 1 > /tmp/anykernel/exitcode; exit;
   fi;
   gunzip -c $split_img/boot.img-ramdisk.gz | cpio -i;
-  cp /tmp/anykernel/fstab.qcom .
 }
 
 # repack ramdisk then build and write image
 write_boot() {
   cd $split_img;
   cmdline=`cat *-cmdline`;
-  cmdline="$cmdline androidboot.selinux=permissive";
   board=`cat *-board`;
   base=`cat *-base`;
   pagesize=`cat *-pagesize`;
@@ -66,15 +67,15 @@ write_boot() {
     kernel=`ls *-zImage`;
     kernel=$split_img/$kernel;
   fi;
-  if [ -e /tmp/anykernel/dt.img ]; then
-    dtb="--dt /tmp/anykernel/dt.img";
-  elif [ -f *-dt.img ]; then
-    dtb=`ls *-dt.img`;
-    dtb="--dt $split_img/$dt.img";
+  if [ -f /tmp/anykernel/dtb ]; then
+    dtb="--dt /tmp/anykernel/dtb";
+  elif [ -f *-dtb ]; then
+    dtb=`ls *-dtb`;
+    dtb="--dt $split_img/$dtb";
   fi;
   cd $ramdisk;
   find . | cpio -H newc -o | gzip > /tmp/anykernel/ramdisk-new.cpio.gz;
-  $bin/mkbootimg --kernel $kernel --ramdisk /tmp/anykernel/ramdisk-new.cpio.gz $second --cmdline "$cmdline" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff  --tags_offset $tagsoff $dtb --output /tmp/anykernel/boot-new.img;
+  $bin/mkbootimg --kernel $kernel --ramdisk /tmp/anykernel/ramdisk-new.cpio.gz $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset $tagsoff $dtb --output /tmp/anykernel/boot-new.img;
   if [ $? != 0 -o `wc -c < /tmp/anykernel/boot-new.img` -gt `wc -c < /tmp/anykernel/boot.img` ]; then
     ui_print " "; ui_print "Repacking image failed. Aborting...";
     echo 1 > /tmp/anykernel/exitcode; exit;
@@ -92,6 +93,58 @@ replace_string() {
   fi;
 }
 
+# insert_line <file> <if search string> <before/after> <line match string> <inserted line>
+insert_line() {
+  if [ -z "$(grep "$2" $1)" ]; then
+    case $3 in
+      before) offset=0;;
+      after) offset=1;;
+    esac;
+    line=$((`grep -n "$4" $1 | cut -d: -f1` + offset));
+    sed -i "${line}s;^;${5};" $1;
+  fi;
+}
+
+# replace_line <file> <line replace string> <replacement line>
+replace_line() {
+  if [ ! -z "$(grep "$2" $1)" ]; then
+    line=`grep -n "$2" $1 | cut -d: -f1`;
+    sed -i "${line}s;.*;${3};" $1;
+  fi;
+}
+
+# remove_line <file> <line match string>
+remove_line() {
+  if [ ! -z "$(grep "$2" $1)" ]; then
+    line=`grep -n "$2" $1 | cut -d: -f1`;
+    sed -i "${line}d" $1;
+  fi;
+}
+
+# prepend_file <file> <if search string> <patch file>
+prepend_file() {
+  if [ -z "$(grep "$2" $1)" ]; then
+    echo "$(cat $patch/$3 $1)" > $1;
+  fi;
+}
+
+# append_file <file> <if search string> <patch file>
+append_file() {
+  if [ -z "$(grep "$2" $1)" ]; then
+    echo -ne "\n" >> $1;
+    cat $patch/$3 >> $1;
+    echo -ne "\n" >> $1;
+  fi;
+}
+
+# replace_file <file> <permissions> <patch file>
+replace_file() {
+  cp -fp $patch/$3 $1;
+  chmod $2 $1;
+}
+
+## end methods
+
 ## AnyKernel permissions
 # set permissions for included files
 chmod -R 755 $ramdisk
@@ -104,8 +157,8 @@ rm -rf $bindir/../lib/modules/*
 
 ## AnyKernel install
 dump_boot;
-# begin ramdisk changes
 
+# begin ramdisk changes
 
 # adb secure
 backup_file default.prop;
@@ -120,9 +173,10 @@ if [ "$found" != 'import /init.god.rc' ]; then
 	echo "import /init.god.rc" >> init.rc
 fi
 
+
+
 # end ramdisk changes
 
 write_boot;
 
 ## end install
-
