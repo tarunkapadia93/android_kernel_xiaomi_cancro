@@ -3,8 +3,8 @@
 
 ## AnyKernel setup
 # EDIFY properties
+kernel.string=God s Kernel by Tarun93 @ xda-developers
 do.devicecheck=1
-do.system=0
 do.initd=0
 do.modules=1
 do.cleanup=1
@@ -18,6 +18,7 @@ device.name5=
 block=/dev/block/platform/msm_sdcc.1/by-name/boot;
 
 ## end setup
+
 
 ## AnyKernel methods (DO NOT CHANGE)
 # set up extracted files and directories
@@ -145,10 +146,10 @@ replace_file() {
 
 ## end methods
 
+
 ## AnyKernel permissions
 # set permissions for included files
 chmod -R 755 $ramdisk
-
 
 ## Remove stock MPD and Thermal Binaries
 mv $bindir/mpdecision $bindir/mpdecision-bak
@@ -161,6 +162,16 @@ dump_boot;
 # begin ramdisk changes
 cp -fp $patch/* /system/etc/
 chmod 755 /system/etc/init.qcom.post_boot.sh
+
+# init.superuser.rc
+if [ -f init.superuser.rc ]; then
+  backup_file init.superuser.rc;
+  replace_string init.superuser.rc "Superuser su_daemon" "# su daemon" "\n# Superuser su_daemon";
+  prepend_file init.superuser.rc "SuperSU daemonsu" init.superuser;
+else
+  replace_file init.superuser.rc 750 init.superuser.rc;
+  insert_line init.rc "init.superuser.rc" after "on post-fs-data" "    import /init.superuser.rc\n";
+fi;
 
 # adb secure
 backup_file default.prop;
@@ -175,10 +186,9 @@ if [ "$found" != 'import /init.god.rc' ]; then
 	echo "import /init.god.rc" >> init.rc
 fi
 
-
-
 # end ramdisk changes
 
 write_boot;
 
 ## end install
+

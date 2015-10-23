@@ -78,32 +78,11 @@ $BBX fstrim -v /cache >> /data/godtest.log
 $BBX fstrim -v /data >> /data/godtest.log
 
 
-stop mpdecision
-
-########################################################
-#MISC
-#
-#sysctl -w net.ipv4.tcp_congestion_control=reno
-#echo "989400" > /sys/module/cpu_boost/parameters/sync_threshold
-#echo "1190400" > /sys/module/cpu_boost/parameters/input_boost_freq
-#echo "500" > /sys/module/cpu_boost/parameters/input_boost_ms
-#echo "10" > /sys/module/cpu_boost/parameters/boost_ms
-#echo "1" > /sys/devices/system/cpu/sched_mc_power_savings
-#echo "9472,13824,19968,44544,58368,65536" > /sys/module/lowmemorykiller/parameters/minfree 
-#echo "3" > sys/kernel/power_suspend/power_suspend_mode
-
-
 ########################################################
 # Scheduler and Read Ahead
 #
 echo bfq > /sys/block/mmcblk0/queue/scheduler
 echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
-
-########################################################
-# GPU Governor
-#
-#echo "simple_ondemand" > /sys/devices/fdb00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq/governor
-#echo "450000000" > /sys/class/kgsl/kgsl-3d0/max_gpuclk
 
 ########################################################
 # LMK Tweaks
@@ -118,18 +97,6 @@ echo "200" > /proc/sys/vm/dirty_expire_centisecs
 echo "40" > /proc/sys/vm/dirty_ratio
 echo "5" > /proc/sys/vm/dirty_background_ratio
 echo "0" > /proc/sys/vm/swappiness
-
-########################################################
-# Dynamic FSync (Let User Decide)
-#
-#echo 0 > /sys/kernel/dyn_fsync/Dyn_fsync_active
-
-########################################################
-# Test Debugging!!!
-#
-#echo 0 > /sys/kernel/sched/gentle_fair_sleepers
-#echo "65" > /sys/module/msm_thermal/parameters/temp_threshold
-#echo "750" > /sys/module/msm_thermal/parameters/poll_interval
 
 ########################################################
 # initialize init.d
@@ -187,9 +154,3 @@ pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver
 # Power Effecient Workqueues (Enable for battery)
 #
 echo "1" > /sys/module/workqueue/parameters/power_efficient
-echo "0" > /sys/module/subsystem_restart/parameters/enable_ramdumps
-
-########################################################
-# Activate Simple_GPU_Algorithym
-#
-#echo 1 > /sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate

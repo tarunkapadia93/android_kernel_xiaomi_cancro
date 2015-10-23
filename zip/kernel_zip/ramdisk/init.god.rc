@@ -1,18 +1,18 @@
 on property:init.svc.bootanim=stopped
     # Set light thermal restrictions while optimizing apps
     # [throttle_freq, throttle_temp, unthrottle_temp]
-    write /sys/kernel/msm_thermal/low_thresh "1728000 47 45"
-    write /sys/kernel/msm_thermal/mid_thresh "1574400 52 49"
-    write /sys/kernel/msm_thermal/high_thresh "1267200 57 55"
+    write /sys/kernel/msm_thermal/low_thresh "1728000 50 48"
+    write /sys/kernel/msm_thermal/mid_thresh "1574400 55 44"
+    write /sys/kernel/msm_thermal/high_thresh "1267200 60 58"
     write /sys/kernel/msm_thermal/enabled 1
     
-#on property:sys.boot_completed=1
-#    write /sys/kernel/msm_thermal/enabled 0
-#    write /sys/kernel/msm_thermal/low_thresh "1574400 40 37"
-#    write /sys/kernel/msm_thermal/mid_thresh "1267200 46 43"
-#    write /sys/kernel/msm_thermal/high_thresh "1190400 52 48"
-#    write /sys/kernel/msm_thermal/sampling_ms 10000
-#    write /sys/kernel/msm_thermal/enabled 1
+on property:sys.boot_completed=1
+    write /sys/kernel/msm_thermal/enabled 0
+    write /sys/kernel/msm_thermal/low_thresh "1574400 47 45"
+    write /sys/kernel/msm_thermal/mid_thresh "1267200 52 49"
+    write /sys/kernel/msm_thermal/high_thresh "1190400 57 55"
+    write /sys/kernel/msm_thermal/sampling_ms 10000
+    write /sys/kernel/msm_thermal/enabled 1
     
 # Call Post-init script
 service Post-init /post_boot.sh
