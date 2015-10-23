@@ -208,12 +208,14 @@ extern void rcu_irq_exit(void);
  * to nest RCU_NONIDLE() wrappers, but the nesting level is currently
  * quite limited.  If deeper nesting is required, it will be necessary
  * to adjust DYNTICK_TASK_NESTING_VALUE accordingly.
+ *
+ * This macro may be used from process-level code only.
  */
 #define RCU_NONIDLE(a) \
 	do { \
-		rcu_irq_enter(); \
+		rcu_idle_exit(); \
 		do { a; } while (0); \
-		rcu_irq_exit(); \
+		rcu_idle_enter(); \
 	} while (0)
 
 /*
