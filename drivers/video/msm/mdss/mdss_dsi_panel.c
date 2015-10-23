@@ -695,7 +695,9 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		pr_err("%s: Invalid input data\n", __func__);
 		return -EINVAL;
 	}
-
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
+#endif
 	ctrl = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
@@ -710,9 +712,6 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	pr_info("%s:-\n", __func__);
 	if (ctrl->on_cmds_tuning)
 		parse_to_dcs_cmds(&ctrl->on_cmds);
-#ifdef CONFIG_POWERSUSPEND
-	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
-#endif
 	return 0;
 }
 
