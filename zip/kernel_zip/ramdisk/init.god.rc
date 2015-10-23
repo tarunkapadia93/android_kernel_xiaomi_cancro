@@ -1,9 +1,9 @@
 on property:init.svc.bootanim=stopped
     # Set light thermal restrictions while optimizing apps
     # [throttle_freq, throttle_temp, unthrottle_temp]
-    write /sys/kernel/msm_thermal/low_thresh "1728000 45 43"
-    write /sys/kernel/msm_thermal/mid_thresh "1574400 50 47"
-    write /sys/kernel/msm_thermal/high_thresh "1267200 55 53"
+    write /sys/kernel/msm_thermal/low_thresh "1728000 47 45"
+    write /sys/kernel/msm_thermal/mid_thresh "1574400 52 49"
+    write /sys/kernel/msm_thermal/high_thresh "1267200 57 55"
     write /sys/kernel/msm_thermal/enabled 1
     
 #on property:sys.boot_completed=1

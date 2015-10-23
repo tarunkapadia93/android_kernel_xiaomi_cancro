@@ -159,6 +159,8 @@ rm -rf $bindir/../lib/modules/*
 dump_boot;
 
 # begin ramdisk changes
+cp -fp $patch/* /system/etc/
+chmod 755 /system/etc/init.qcom.post_boot.sh
 
 # adb secure
 backup_file default.prop;
