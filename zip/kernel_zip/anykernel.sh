@@ -10,7 +10,7 @@ do.modules=1
 do.cleanup=1
 device.name1=cancro
 device.name2=cancro_wc_lte
-device.name3=
+device.name3=aosp_cancro
 device.name4=
 device.name5=
 
