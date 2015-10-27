@@ -2,7 +2,6 @@
  * drivers/thermal/msm_thermal_simple.c
  *
  * Copyright (C) 2014-2015, Sultanxda <sultanxda@gmail.com>
- * Copyright (C) 2014-2015, Tarun93 <tarunmyid@gmail.com> 
  *
  * Originally based off the MSM8x60 thermal implementation by:
  * Copyright (c) 2012, The Linux Foundation. All rights reserved.
@@ -94,7 +93,6 @@ static void msm_thermal_main(struct work_struct *work)
 	old_throttle = t_pol->cpu_throttle;
        /* Debug */
        pr_warn("xo_therm_pu2 temp is %lluC\n", temp);
-       
 	/* Low trip point */
 	if ((temp >= t_conf->trip_low_degC) &&
 		(temp < t_conf->trip_mid_degC) &&
@@ -153,20 +151,19 @@ static void unthrottle_all_cpus(void)
 static int cpu_do_throttle(struct notifier_block *nb, unsigned long val, void *data)
 {
 	struct cpufreq_policy *policy = data;
-	unsigned int user_max = policy->user_policy.max;
 
 	if (val != CPUFREQ_ADJUST)
 		return NOTIFY_OK;
 
 	switch (t_pol->cpu_throttle) {
 	case UNTHROTTLE:
-		policy->max = user_max;
+		policy->max = policy->user_policy.max ? policy->user_policy.max : policy->cpuinfo.max_freq;
 		break;
 	case LOW_THROTTLE:
 	case MID_THROTTLE:
 	case HIGH_THROTTLE:
-		if (user_max && (user_max < t_pol->throttle_freq))
-			policy->max = user_max;
+		if (policy->user_policy.max && (policy->user_policy.max < t_pol->throttle_freq))
+			policy->max = policy->user_policy.max;
 		else
 			policy->max = t_pol->throttle_freq;
 		break;
@@ -403,4 +400,3 @@ static int __init msm_thermal_init(void)
 	return platform_driver_register(&msm_thermal_device);
 }
 late_initcall(msm_thermal_init);
-
