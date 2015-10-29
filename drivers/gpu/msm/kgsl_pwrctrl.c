@@ -336,8 +336,8 @@ static int kgsl_pwrctrl_min_pwrlevel_store(struct device *dev,
 		return ret;
 
 	kgsl_mutex_lock(&device->mutex, &device->mutex_owner);
-	if (level > pwr->num_pwrlevels - 2)
-		level = pwr->num_pwrlevels - 2;
+	if (level > pwr->num_pwrlevels - 1)
+		level = pwr->num_pwrlevels - 1;
 
 	/* You can't set a minimum power level lower than the maximum */
 	if (level < pwr->max_pwrlevel)
@@ -421,8 +421,15 @@ static int kgsl_pwrctrl_max_gpuclk_store(struct device *dev,
 	if (level < 0)
 		goto done;
 
-	pwr->thermal_pwrlevel = level;
+	if (level > 7)
+		level = 7;
 
+	/* if ROM set 450 max, set 650Max */
+	if (level == 2)
+		pwr->thermal_pwrlevel = level - 2;
+	else
+		pwr->thermal_pwrlevel = level;
+		
 	/*
 	 * if the thermal limit is lower than the current setting,
 	 * move the speed down immediately
@@ -1083,7 +1090,7 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 	/* Initialize the user and thermal clock constraints */
 
 	pwr->max_pwrlevel = 0;
-	pwr->min_pwrlevel = pdata->num_levels - 1;
+	pwr->min_pwrlevel = pdata->num_levels - 2;
 	pwr->thermal_pwrlevel = 0;
 
 	pwr->active_pwrlevel = pdata->init_level;
