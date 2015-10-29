@@ -70,7 +70,7 @@ static struct hotplug_tuners {
 #endif
 	.min_cpus_online = 1,
 	.maxcoreslimit = NR_CPUS,
-	.maxcoreslimit_sleep = 1,
+	.maxcoreslimit_sleep = 2,
 	.hotplug_suspend = 0,
 	.suspended = false,
 	.force_cpu_up = false,
@@ -727,9 +727,9 @@ static int __init alucard_hotplug_init(void)
 		{652800, 1190400},
 		{652800, 0}
 #else
-		{0, 1497600},
-		{960000, 1574400},
-		{1036800, 1728000},
+		{0, 1267200},
+		{960000, 1497600},
+		{1036800, 1574400},
 		{1190400, 0}
 #endif
 	};
