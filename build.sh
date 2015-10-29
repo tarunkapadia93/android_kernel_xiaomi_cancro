@@ -11,7 +11,7 @@ KERNEL_DIR=~/mi3
 # OUTPUT FOLDER WHERE YOU HAVE YOU ANYKERNEL TEMPLET N DTBTOOLCM
 KERNEL_OUT=~/mi3/zip/kernel_zip
 # TOOLCHAIN PATH FOR STRIPING TOOLCHAINS
-STRIP=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-strip
+STRIP=~/toolchains/UBERTC-arm-eabi-6.0/bin/arm-eabi-strip
  
 #Clean the build
 echo -n "${bldblu} Do you wanna clean the build (y/n)? ${txtrst}"
@@ -27,16 +27,16 @@ if echo "$answer" | grep -iq "^y" ;then
 fi
      
 echo -e "${bldgrn} Setting up Build Environment ${txtrst}"
-export KBUILD_BUILD_USER="Tarun93"
-export KBUILD_BUILD_HOST="GOD'S_KERNEL_R3"
+export KBUILD_BUILD_USER="GOD'S_KERNEL_R3"
+export KBUILD_BUILD_HOST="Buildbot"
 export ARCH=arm
 
 #ADD THE CORRECT TOOLCHAIN PATH 
 
 #export CROSS_COMPILE=~/toolchains/Sabermod-arm-eabi-5.2/bin/arm-eabi-
 #export CROSS_COMPILE=/home/tarun93/toolchains/arm-cortex_a7-linux-gnueabihf-linaro_4.9/bin/arm-cortex_a7-linux-gnueabihf-
-export CROSS_COMPILE=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-
-#export CROSS_COMPILE=~/toolchains/UBERTC-arm-eabi-6.0/bin/arm-eabi-
+#export CROSS_COMPILE=~/toolchains/arm-cortex_a15-linux-gnueabihf-linaro_4.9.4-2015.06/bin/arm-cortex_a15-linux-gnueabihf-
+export CROSS_COMPILE=~/toolchains/UBERTC-arm-eabi-6.0/bin/arm-eabi-
      
      
 echo -e "${bldgrn} Building Defconfig ${txtrst}"

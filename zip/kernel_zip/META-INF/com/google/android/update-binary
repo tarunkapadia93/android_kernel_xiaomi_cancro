@@ -34,7 +34,11 @@ unzip -o "$ZIP";
 ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
 ui_print " ";
 ui_print "AnyKernel2 by osm0sis @ xda-developers";
-ui_print "God's Kernel R3 by Tarun93 @ xda-developers";
+ui_print "#######################################";
+ui_print "              GOD'S KERNEL             ";
+ui_print "                   R3                  ";
+ui_print "#######################################";
+ui_print "By Tarun93@xda-developers"
 /sbin/busybox mount /system;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
