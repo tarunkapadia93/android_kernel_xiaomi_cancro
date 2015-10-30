@@ -90,7 +90,7 @@ fi
      
 echo -e "${bldgrn} Zipping the Kernel Build  ${txtrst}"
 cd $KERNEL_OUT/
-zip -r ../GK_CANCRO_LP_KK_$(date +%d%m%Y_%H%M) .
+zip -r ../GK_CANCRO_LP_KK_MIUI_$(date +%d%m%Y_%H%M) .
 
 OUTZIP=$(find ../*.zip)
 cd $KERNEL_DIR
