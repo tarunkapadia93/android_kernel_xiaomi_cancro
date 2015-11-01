@@ -1286,7 +1286,7 @@ static int mxt_monitor_delta_no_calib_risk(struct mxt_data *data, u8 type)
 	struct device *dev = &data->client->dev;
 	int error, i;
 	u16 addr = data->T37_address;
-	short val, no_touch_threshold, prev_val;
+	short val, no_touch_threshold = 0, prev_val = 0;
 	u8 *buf;
 	size_t buf_size;
 	u8 mode;
@@ -1295,8 +1295,8 @@ static int mxt_monitor_delta_no_calib_risk(struct mxt_data *data, u8 type)
 	int result = MONITOR_NO_RISK;
 	int read_size = 0;
 	int count = 0, row = 0;
-	short *ref_buf;
-	int diff_max;
+	short *ref_buf = NULL;
+	int diff_max = 0;
 
 	if (type == DELTA_TYPE_SELF) {
 		buf_size = MXT_DIAG_SELF_SIZE;

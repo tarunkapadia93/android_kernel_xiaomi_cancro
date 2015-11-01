@@ -6132,7 +6132,7 @@ static int __devinit tapan_probe(struct platform_device *pdev)
 	bool is_wcd9306;
 
 	is_wcd9306 = tapan_check_wcd9306(&pdev->dev, false);
-	if (is_wcd9306 < 0) {
+	if (is_wcd9306 != 0) {
 		dev_info(&pdev->dev, "%s: cannot find codec type, default to 9306\n",
 			 __func__);
 		is_wcd9306 = true;
