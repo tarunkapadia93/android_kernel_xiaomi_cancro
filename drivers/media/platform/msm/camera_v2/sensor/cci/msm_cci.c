@@ -1127,7 +1127,7 @@ static struct of_device_id msm_sensor_dt_match_x5[] = {
 static int __devinit msm_cci_probe(struct platform_device *pdev)
 {
 	struct cci_device *new_cci_dev;
-	struct of_device_id *msm_sensor_dt_match;
+	struct of_device_id *msm_sensor_dt_match = NULL;
 	int rc = 0;
 	unsigned int hw = get_hw_version_major();
 

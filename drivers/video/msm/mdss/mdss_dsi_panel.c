@@ -174,7 +174,7 @@ static void mdss_dsi_panel_bklt_dcs(struct mdss_dsi_ctrl_pdata *ctrl, int level)
 
 static int mdss_dsi_request_pongpios(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 {
-	int rc;
+	int rc = 0;
 
 	if (ctrl_pdata->panel_incell) {
 		if (gpio_is_valid(ctrl_pdata->tpldo_gpio)) {
