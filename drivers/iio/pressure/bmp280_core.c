@@ -1554,7 +1554,7 @@ static int bmp_init_client(struct bmp_client_data *data)
 static int bmp_iio_buffer_setup(struct iio_dev *indio_dev,
 			const struct iio_buffer_setup_ops *setup_ops)
 {
-	int ret;
+	int ret = 0;
 
 	indio_dev->buffer = iio_kfifo_allocate(indio_dev);
 	if (!indio_dev->buffer) {
