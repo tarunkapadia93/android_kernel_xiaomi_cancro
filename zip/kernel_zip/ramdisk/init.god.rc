@@ -1,10 +1,20 @@
 on property:init.svc.bootanim=stopped
     # Set light thermal restrictions while optimizing apps
     # [throttle_freq, throttle_temp, unthrottle_temp]
-    write /sys/kernel/msm_thermal/low_thresh "1728000 46 44"
-    write /sys/kernel/msm_thermal/mid_thresh "1574400 51 48"
-    write /sys/kernel/msm_thermal/high_thresh "1267200 56 54"
-    write /sys/kernel/msm_thermal/enabled 1
+    #write /sys/kernel/msm_thermal/low_thresh "1728000 46 44"
+    #write /sys/kernel/msm_thermal/mid_thresh "1574400 51 48"
+    #write /sys/kernel/msm_thermal/high_thresh "1267200 56 54"
+    #write /sys/kernel/msm_thermal/enabled 1
+    write /sys/devices/system/cpu/cpufreq/impulse/above_hispeed_delay "20000 1400000:40000 1700000:20000"
+    write /sys/devices/system/cpu/cpufreq/impulse/go_hispeed_load 95
+    write /sys/devices/system/cpu/cpufreq/impulse/hispeed_freq 1190400
+    write /sys/devices/system/cpu/cpufreq/impulse/io_is_busy 1
+    write /sys/devices/system/cpu/cpufreq/impulse/target_loads "85 1500000:90 1800000:70"
+    write /sys/devices/system/cpu/cpufreq/impulse/min_sample_time 40000
+    write /sys/devices/system/cpu/cpufreq/impulse/timer_rate 30000
+    write /sys/devices/system/cpu/cpufreq/impulse/max_freq_hysteresis 100000
+    write /sys/devices/system/cpu/cpufreq/impulse/timer_slack 30000
+    write /sys/devices/system/cpu/cpufreq/impulse/powersave_bias 1
 
 # Call Post-init script
 service Post-init /post_boot.sh
