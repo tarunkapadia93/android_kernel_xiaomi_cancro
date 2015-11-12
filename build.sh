@@ -52,9 +52,9 @@ l5_2=~/toolchains/linaro-5.2/bin/arm-eabi
 
 echo -e "${bldgrn} Setting up Build Environment ${txtrst}"
 export KBUILD_BUILD_USER="Buildbot"
-export KBUILD_BUILD_HOST="GOD'S_KERNEL_R3"
+export KBUILD_BUILD_HOST="GOD'S_KERNEL_R4"
 export ARCH=arm
-export CROSS_COMPILE=$l5_2-
+export CROSS_COMPILE=$ub6_0-
 
 #Clean the build
 rm -rf $KERNEL_OUT/dtb
@@ -106,7 +106,7 @@ find . -name '*.ko' -exec cp {} $KERNEL_OUT/modules/ \;
 
 #MAKE SURE YOU GIVE THE CORRECT PATH FOR THE TOOLCHAIN
 echo "${bldgrn}Stripping modules for size${txtrst}"
-$l5_2-strip --strip-unneeded $KERNEL_OUT/modules/*.ko
+$ub6_0-strip --strip-unneeded $KERNEL_OUT/modules/*.ko
 
 echo -e "${bldgrn} DTB Build  ${txtrst}"
 .$KERNEL/zip/dtbToolCM -2 -o $KERNEL_OUT/dtb -s 2048 -p scripts/dtc/ arch/arm/boot/

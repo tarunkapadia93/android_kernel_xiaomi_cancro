@@ -36,7 +36,7 @@ ui_print " ";
 ui_print "AnyKernel2 by osm0sis @ xda-developers";
 ui_print "#######################################";
 ui_print "              GOD'S KERNEL             ";
-ui_print "                   R3                  ";
+ui_print "                   R4                  ";
 ui_print "#######################################";
 ui_print "By Tarun93@xda-developers"
 /sbin/busybox mount /system;
