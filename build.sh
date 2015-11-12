@@ -119,7 +119,7 @@ fi
 
 echo -e "${bldgrn} Zipping the Kernel Build  ${txtrst}"
 cd $KERNEL_OUT/
-zip -r9 ../GK_CANCRO_LP_KK_MIUI_$(date +%d%m%Y_%H%M) .
+zip -r9 ../GK_CANCRO_MM_LP_KK_MIUI_$(date +%d%m%Y_%H%M) .
 
 cd ../
 ZIP=$(find *$(date +%d%m%Y_%H%M).zip)
