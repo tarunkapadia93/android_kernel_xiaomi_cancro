@@ -128,6 +128,8 @@ source "drivers/staging/android/Kconfig"
 
 source "drivers/staging/telephony/Kconfig"
 
+source "drivers/staging/prima/Kconfig"
+
 source "drivers/staging/ramster/Kconfig"
 
 source "drivers/staging/ozwpan/Kconfig"
